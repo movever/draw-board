@@ -15,7 +15,7 @@
      */
     var DrawPanel = function(option) {
         var that = this;
-        var type = this.type = option.type || 'rect';
+        this.type = option.type || 'rect';
         this.lineWidth = option.lineWidth || 1;
         this.color = option.color || 'rgb(0, 0, 0)'
         this.stack = []; this.rstack = [];
@@ -167,48 +167,44 @@
             }
         };
         var points = [];
-        var oend;
         draw.curve = {
             start: function (position) {
-                ctx2.save();
                 ctx2.beginPath();
                 ctx2.lineJoin = 'round';
-                if (!oend) {
-                    ctx2.moveTo(position.left, position.top);
-                    points.push(position);
-                } else {
-                    ctx2.moveTo(oend.left, oend.top);
-                }
-                oend = position;
+                ctx2.moveTo(position.left, position.top);
+                points.push(position);
             },
             ing: function (start, end) {
+                ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
                 ctx2.lineTo(end.left, end.top);
                 points.push(end);
                 ctx2.stroke();
             },
-            end: function (start, end) {
-                ctx2.restore();
+            end: function () {
                 ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+                //回退或前进功能中重绘时会重新读取该数组，而points是动态变化的，所以拷贝一份出来
                 var stackPoints = points.slice(0);
+                var color = ctx1.strokeStyle;
+                var lineWidth = ctx1.lineWidth;
                 var draw = function () {
-                    var oend;
+                    ctx1.save();
+                    ctx1.strokeStyle = color;
+                    ctx1.lineWidth = lineWidth;
+                    ctx1.beginPath();
                     $.each(stackPoints, function(i, p){
-                        ctx1.beginPath();
-                        if (!oend) {
+                        if (i===0) {
                             ctx1.moveTo(p.left, p.top);
                         } else {
-                            ctx1.moveTo(oend.left, oend.top);
+                            ctx1.lineTo(p.left, p.top);
                         }
-                        oend = p;
-                        ctx1.lineTo(p.left, p.top);
-                        ctx1.stroke();
                     });
+                    ctx1.stroke();
+                    ctx1.restore();
                 }
                 draw();
                 that.stack.push(draw);
                 that.rstack = [];
                 points = [];
-                oend = null;
             }
         };
 

@@ -11,6 +11,8 @@
         .handler1 a, .handler2 a{border-bottom:#ccc solid 1px;height:30px;line-height:30px;font-size:12px;display: block;text-align:center;}
         .handler1 a.active, .handler2 a.active{background:#ddd;}
         input{width:30px;}
+        .handler1 span, .handler2 span{width:10px;height:10px;margin:1px;display:block;border:#fff solid 1px;}
+        .handler1 span.active, .handler2 span.active{width:10px;height:10px;margin:1px;display:block;border-color:red;}
     </style>
 </head>
 <body style="">
@@ -25,7 +27,11 @@
         <a class="ease" href="javascript:;">橡皮</a>
         <a class="back" href="javascript:;">后退</a>
         <a class="forward" href="javascript:;">前进</a>
-        <input class="lineWidth" value="5" autocomplete="off" />
+        <input class="lineWidth" value="1" autocomplete="off" />
+        <span style="background: red;"></span>
+        <span style="background: green;"></span>
+        <span style="background: blue;"></span>
+        <span style="background: #000;"></span>
     </div>
     <div class="con2">
         
@@ -72,7 +78,10 @@
         $('.handler1 a.back').click(function () { panel.back(); });
         $('.handler1 a.forward').click(function () { panel.forward(); });
         $('.handler1 .lineWidth').change(function () { panel.setLineWidth($(this).val()); });
-
+        $('.handler1 span').click(function () {
+            panel.setColor($(this).css('background-color'));
+            $(this).addClass('active').siblings('span').removeClass('active');
+        });
 
 
         $('.handler2 a.rect').click(function () { panel2.type = 'rect'; });
@@ -80,6 +89,8 @@
         $('.handler2 a.line').click(function () { panel2.type = 'line'; });
         $('.handler2 a.curve').click(function () { panel2.type = 'curve'; });
         $('.handler2 a.ease').click(function () { panel2.type = 'ease'; });
+
+
     </script>
 </body>
 </html>
