@@ -83,8 +83,14 @@
             },
             end: function (start, end) {
                 ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+                var color = ctx1.strokeStyle;
+                var lineWidth = ctx1.lineWidth;
                 var draw = function () {
+                    ctx1.save();
+                    ctx1.lineWidth = lineWidth;
+                    ctx1.strokeStyle = color;
                     ctx1.strokeRect(start.left, start.top, end.left - start.left, end.top - start.top);
+                    ctx1.restore();
                 }
                 draw();
                 that.stack.push(draw);
@@ -100,10 +106,16 @@
             },
             end: function (start, end) {
                 ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+                var color = ctx1.strokeStyle;
+                var lineWidth = ctx1.lineWidth;
                 var draw = function () {
+                    ctx1.save();
+                    ctx1.lineWidth = lineWidth;
+                    ctx1.strokeStyle = color;
                     ctx1.beginPath();
                     ctx1.arc( start.left + (end.left-start.left)/2, start.top + (end.top-start.top)/2, len(start, end)/2, 0, 2*Math.PI );
                     ctx1.stroke();
+                    ctx1.restore();
                 }
                 draw();
                 that.stack.push(draw);
