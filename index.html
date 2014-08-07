@@ -24,6 +24,7 @@
         <a class="round" href="javascript:;">圆形</a>
         <a class="line" href="javascript:;">直线</a>
         <a class="curve" href="javascript:;">曲线</a>
+        <a class="arrow" href="javascript:;">箭头</a>
         <a class="ease" href="javascript:;">橡皮</a>
         <a class="back" href="javascript:;">后退</a>
         <a class="forward" href="javascript:;">前进</a>
@@ -47,6 +48,7 @@
     <script type="text/javascript" src="lab/_.js"></script>
     <script type="text/javascript" src="drag.js"></script>
     <script type="text/javascript" src="mouse.js"></script>
+    <script type="text/javascript" src="arrow.js"></script>
     <script type="text/javascript" src="draw.js"></script>
     <!--[if lt IE 9]>
         <script type="text/javascript" src="lab/excanvas.js"></script>
@@ -56,7 +58,7 @@
             width: $('.con1').width(),
             height: $('.con1').height(),
             parent: '.con1',
-            type: 'curve',
+            type: 'arrow',
             lineWidth: $('.handler1 .lineWidth').val(),
             color: 'red'
         });
@@ -74,6 +76,7 @@
         $('.handler1 a.round').click(function () { panel.type = 'round'; });
         $('.handler1 a.line').click(function () { panel.type = 'line'; });
         $('.handler1 a.curve').click(function () { panel.type = 'curve'; });
+        $('.handler1 a.arrow').click(function () { panel.type = 'arrow'; });
         $('.handler1 a.ease').click(function () { panel.type = 'ease'; });
         $('.handler1 a.back').click(function () { panel.back(); });
         $('.handler1 a.forward').click(function () { panel.forward(); });

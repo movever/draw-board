@@ -226,7 +226,9 @@
                 points = [];
             }
         };
-
+        ctx1.canvas = canvas1;
+        ctx2.canvas = canvas2;
+        draw.arrow = window.shape_arrow(ctx1, ctx2);
         $(canvas2).drag({
             dragstart: function (position) {
                 that.refuseSelection();
