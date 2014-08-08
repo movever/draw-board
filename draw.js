@@ -236,7 +236,7 @@
             },
             dragcontinue: function (position) {
                 that.refuseSelection();
-                (draw[that.type].continue || $.noop)(position);
+                (draw[that.type]["continue"] || $.noop)(position);
             },
             dragpause: function (position) {
                 that.allowSelection();
