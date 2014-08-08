@@ -1,5 +1,4 @@
 window.shape_arrow = function(ctx1, ctx2, that) {
-    //画一个等腰三角形
     var arrow = function(ctx2, start, end) {
         ctx2.save()
         ctx2.beginPath()
