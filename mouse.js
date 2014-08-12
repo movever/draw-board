@@ -1,5 +1,4 @@
-//mouse offset
-(function(){
+define(function() {
     var elementOffset = function(elem) {
         var x, y;
         x = 0;
@@ -23,5 +22,5 @@
             top: event.pageY - offset.y
         };
     };
-    window.getMouseOffset = getOffset;
-})();
+    return getOffset;
+});
