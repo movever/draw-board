@@ -1,11 +1,12 @@
-define(["lab/jquery", "mouse"], function($, getMouseOffset) {
-    $.fn.drag = function(option){
-        var dragging = option.dragging || $.noop,
+define(["jquery", "./mouse.js"], function($, getMouseOffset) {
+    var drag = function(selector, option) {
+        var $els = $(selector),
+            dragging = option.dragging || $.noop,
             dragend = option.dragend || $.noop,
             dragcontinue = option.dragcontinue || $.noop,
             dragpause = option.dragpause || $.noop,
             dragstart = option.dragstart || $.noop;
-        return $(this).each(function(){
+        $els.each(function(){
             var mouse = $.proxy(function(e){
                 return getMouseOffset(this, e);
             } ,this);
@@ -16,7 +17,6 @@ define(["lab/jquery", "mouse"], function($, getMouseOffset) {
             $this.mousedown(function(e){
                 if (mousestate.down == true) {
                     //如果鼠标在离开绘图区域后弹起，再次进入绘图区域，不进行重新计算，而是继续之前的绘图
-                    dragcontinue.call(this, mouse(e));
                     return false;
                 } else {
                     mousestate.down = true;
@@ -33,14 +33,22 @@ define(["lab/jquery", "mouse"], function($, getMouseOffset) {
                 }
             });
             $this.mouseout(function (e) {
+                if(!mousestate.down) return;
                 dragpause.call(this, mouse(e));
+                mousestate.out = true;
             });
             var move = function(e){
                 if(!mousestate.down) return;
+                if(mousestate.out === true) {
+                    //如果鼠标在离开绘图区域后弹起，再次进入绘图区域，不进行重新计算，而是继续之前的绘图
+                    dragcontinue.call(this, mouse(e));
+                }
+                mousestate.out = false;
                 mousestate.move = true;
                 dragging.call(this, mousestate.downOffset, mouse(e));
             }
             $this.mousemove(move);
         });
-    }
+    };
+    return drag;
 });

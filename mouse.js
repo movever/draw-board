@@ -15,6 +15,7 @@ define(function() {
             y: y
         };
     };
+    //event是jquery中的event对象 原生event有兼容问题
     var getOffset = function(elem, event) {
         var offset = elementOffset(elem);
         return {
