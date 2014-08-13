@@ -89,18 +89,6 @@ define(["drag", "mouse", "arrow", "rect", "round", "line", "curve", "ease", "uti
             dragend: function (start, end) {
                 draw[that.type].end(start, end);
                 that.allowSelection();
-            },
-            clear: function () {
-                if (option.clearBt) {
-                    $(option.clearBt).click(function () {
-                        var draw = function () {
-                            ctx1.clearRect(0, 0, canvas2.width, canvas2.height);
-                            this.rstack = [];
-                        }
-                        draw();
-                        this.stack.push(draw);
-                    });
-                }
             }
         });
     };
@@ -162,6 +150,16 @@ define(["drag", "mouse", "arrow", "rect", "round", "line", "curve", "ease", "uti
             } else if (window.getSelection) {
                 window.getSelection().removeAllRanges();
             }
+        },
+        clear: function () {
+            var that = this,
+                canvas2 = this.canvas2;
+            var draw = function () {
+                that.ctx1.clearRect(0, 0, canvas2.width, canvas2.height);
+                that.rstack = [];
+            }
+            draw();
+            this.stack.push(draw);
         }
     }
 

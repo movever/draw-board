@@ -46,6 +46,9 @@ require(["jquery", "_", "../src/draw-board.js"], function($, _, DrawBoard) {
         panel.setColor($(this).css('background-color'));
         $(this).addClass('active').siblings('span').removeClass('active');
     });
+    $('.handler1 .clear').click(function() {
+        panel.clear();
+    });
 
 
     $('.handler2 a.rect').click(function () { panel2.type = 'rect'; });
