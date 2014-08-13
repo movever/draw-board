@@ -1,4 +1,4 @@
-;(function () {
+defind(['jquery', 'mouse', 'drag'], function($, getMouseOffset, drag) {
     //两点间的距离
     var len = function(start, end){
             var w = end.left-start.left
@@ -14,7 +14,7 @@
      * @param canvas1和canvas2是两个重叠的canvas标签 canvas2在canvas1上面
      * 对于ie，不支持canvas，canvas1和canvas2是excanvas初始化的canvas对象
      */
-    var DrawPanel = function(option) {
+    var DrawBoard = function(option) {
         var that = this;
         this.type = option.type || 'rect';
         this.lineWidth = option.lineWidth || 1;
@@ -29,7 +29,7 @@
         canvas1.height = canvas2.height = option.height;
         $canvases.css({ position: 'absolute', left: 0, top: 0 });
         $con.appendTo(option.parent);
-        
+
         if(window.G_vmlCanvasManager){
             $("#btn_eraser").hide();
             canvas1=window.G_vmlCanvasManager.initElement(canvas1);
@@ -47,7 +47,7 @@
         ctx1.strokeStyle = this.color;
         ctx2.lineWidth = this.lineWidth;
         ctx1.lineWidth = this.lineWidth;
-        
+
         if (option.clearBt) {
             $(option.clearBt).click(function () {
                 var draw = function () {
@@ -229,7 +229,7 @@
         ctx1.canvas = canvas1;
         ctx2.canvas = canvas2;
         draw.arrow = window.shape_arrow(ctx1, ctx2, that);
-        $(canvas2).drag({
+        drag(canvas2, {
             dragstart: function (position) {
                 that.refuseSelection();
                 (draw[that.type].start || $.noop)(position);
@@ -251,7 +251,7 @@
             }
         });
     };
-    DrawPanel.prototype = {
+    DrawBoard.prototype = {
         //撤消
         back: function () {
             this.ctx1.clearRect(0, 0, this.canvas1.width, this.canvas1.height);
@@ -289,7 +289,7 @@
                 '-ms-user-select': 'none',      /* IE 10+ */
                 /* No support for these yet, use at own risk */
                 '-o-user-select': 'none',
-                'user-select': 'none'         
+                'user-select': 'none'
             }).bind('selectstart', ident);
             this.clearSelection();
         },
@@ -300,7 +300,7 @@
                 '-ms-user-select': 'auto',      /* IE 10+ */
                 /* No support for these yet, use at own risk */
                 '-o-user-select': 'auto',
-                'user-select': 'auto'         
+                'user-select': 'auto'
             }).unbind('selectstart', ident);
         },
         clearSelection: function () {
@@ -311,5 +311,5 @@
             }
         }
     }
-    window.DrawPanel = DrawPanel;
-} ());
+    return DrawBoard;
+});

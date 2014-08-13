@@ -229,7 +229,7 @@ define(["drag", "mouse", "arrow"], function(drag, getMouseOffset, shape_arrow) {
         ctx1.canvas = canvas1;
         ctx2.canvas = canvas2;
         draw.arrow = shape_arrow(ctx1, ctx2, that);
-        $(canvas2).drag({
+        drag(canvas2, {
             dragstart: function (position) {
                 that.refuseSelection();
                 (draw[that.type].start || $.noop)(position);

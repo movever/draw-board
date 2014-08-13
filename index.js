@@ -1,4 +1,10 @@
-require(["lab/jquery.js", "lab/_.js", "draw-board.js"], function($, _, DrawBoard) {
+require.config({
+    baseUrl: "./",
+    paths: {
+        jquery: 'lab/jquery'
+    }
+});
+require(["jquery", "lab/_.js", "draw-board.js"], function($, _, DrawBoard) {
     var panel = new DrawBoard({
         width: $('.con1').width(),
         height: $('.con1').height(),
