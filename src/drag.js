@@ -1,4 +1,4 @@
-define(["jquery", "./mouse.js"], function($, getMouseOffset) {
+define(["jquery", "mouse"], function($, getMouseOffset) {
     var drag = function(selector, option) {
         var $els = $(selector),
             dragging = option.dragging || $.noop,
