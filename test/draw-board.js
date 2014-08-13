@@ -11,7 +11,8 @@ require.config({
         line: 'src/line',
         curve: 'src/curve',
         ease: 'src/ease',
-        util: 'src/util'
+        util: 'src/util',
+        html2canvas: 'lab/html2canvas'
     }
 });
 require(["jquery", "_", "../src/draw-board.js"], function($, _, DrawBoard) {
@@ -49,7 +50,9 @@ require(["jquery", "_", "../src/draw-board.js"], function($, _, DrawBoard) {
     $('.handler1 .clear').click(function() {
         panel.clear();
     });
-
+    $('.handler1 .save').click(function() {
+        panel.save();
+    });
 
     $('.handler2 a.rect').click(function () { panel2.type = 'rect'; });
     $('.handler2 a.round').click(function () { panel2.type = 'round'; });

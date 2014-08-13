@@ -1,4 +1,14 @@
-define(["drag", "mouse", "arrow", "rect", "round", "line", "curve", "ease", "util"], function(drag, getMouseOffset, shape_arrow, rect, round, line, curve, ease, util) {
+define(function(require) {
+    var drag = require('drag'),
+        getMouseOffset = require('mouse'),
+        shape_arrow = require('arrow'),
+        rect = require('arrow'),
+        round = require('round'),
+        line = require('line'),
+        curve = require('curve'),
+        ease = require('ease'),
+        util = require('util'),
+        a = require('html2canvas');
     var ident = function() {
             return false;
         };
@@ -9,6 +19,7 @@ define(["drag", "mouse", "arrow", "rect", "round", "line", "curve", "ease", "uti
      */
     var DrawBoard = function(option) {
         var that = this;
+        this.option = option || {};
         this.type = option.type || 'rect';
         this.lineWidth = option.lineWidth || 1;
         this.color = option.color || 'rgb(0, 0, 0)'
@@ -40,22 +51,6 @@ define(["drag", "mouse", "arrow", "rect", "round", "line", "curve", "ease", "uti
         ctx1.strokeStyle = this.color;
         ctx2.lineWidth = this.lineWidth;
         ctx1.lineWidth = this.lineWidth;
-
-
-        if (option.saveBt) {
-            $(option.saveBt).click(function () {
-                if (!window.getComputedStyle) { alert('您的浏览器不支持'); return; }
-                var data;
-                html2canvas($('#container').get(0), {
-                    onrendered: function (canvas) {
-                        var data = canvas.toDataURL('image/jpeg');
-                        var w = window.open();
-                        $(w.document.body).append('<img src="'+data+'" />');
-                        w.document.title = '保存绘图';
-                    }
-                });
-            });
-        }
         var mouse = {};
         $(canvas2).mousemove(function(e){
             mouse = getMouseOffset($(canvas2).get(0), e);
@@ -160,6 +155,18 @@ define(["drag", "mouse", "arrow", "rect", "round", "line", "curve", "ease", "uti
             }
             draw();
             this.stack.push(draw);
+        },
+        save: function() {
+            if (!window.getComputedStyle) { alert('您的浏览器不支持'); return; }
+            var data;
+            html2canvas($(this.option.parent)[0], {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL('image/jpeg');
+                    var w = window.open();
+                    $(w.document.body).append('<img src="'+data+'" />');
+                    w.document.title = '保存绘图';
+                }
+            });
         }
     }
 
