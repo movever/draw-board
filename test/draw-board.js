@@ -5,7 +5,13 @@ require.config({
         _: 'lab/_',
         mouse: 'src/mouse',
         drag: 'src/drag',
-        arrow: 'src/arrow'
+        arrow: 'src/arrow',
+        rect: 'src/rect',
+        round: 'src/round',
+        line: 'src/line',
+        curve: 'src/curve',
+        ease: 'src/ease',
+        util: 'src/util'
     }
 });
 require(["jquery", "_", "../src/draw-board.js"], function($, _, DrawBoard) {

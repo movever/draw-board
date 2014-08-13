@@ -1,14 +1,7 @@
-define(["drag", "mouse", "arrow"], function(drag, getMouseOffset, shape_arrow) {
-    //两点间的距离
-    var len = function(start, end){
-            var w = end.left-start.left
-            var h = end.top-start.top;
-            return Math.sqrt(Math.pow(w, 2) + Math.pow(h, 2));
-        },
-        ident = function () {
+define(["drag", "mouse", "arrow", "rect", "round", "line", "curve", "ease", "util"], function(drag, getMouseOffset, shape_arrow, rect, round, line, curve, ease, util) {
+    var ident = function() {
             return false;
         };
-
     /**
      * 为canvas添加绘图功能
      * @param canvas1和canvas2是两个重叠的canvas标签 canvas2在canvas1上面
@@ -48,16 +41,7 @@ define(["drag", "mouse", "arrow"], function(drag, getMouseOffset, shape_arrow) {
         ctx2.lineWidth = this.lineWidth;
         ctx1.lineWidth = this.lineWidth;
 
-        if (option.clearBt) {
-            $(option.clearBt).click(function () {
-                var draw = function () {
-                    ctx1.clearRect(0, 0, canvas2.width, canvas2.height);
-                    this.rstack = [];
-                }
-                draw();
-                this.stack.push(draw);
-            });
-        }
+
         if (option.saveBt) {
             $(option.saveBt).click(function () {
                 if (!window.getComputedStyle) { alert('您的浏览器不支持'); return; }
@@ -77,155 +61,12 @@ define(["drag", "mouse", "arrow"], function(drag, getMouseOffset, shape_arrow) {
             mouse = getMouseOffset($(canvas2).get(0), e);
         });
         var draw = {};
-        draw.rect = {
-            ing: function (start, end) {
-                ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-                ctx2.strokeRect(start.left, start.top, end.left - start.left, end.top - start.top);
-            },
-            end: function (start, end) {
-                ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-                var color = ctx1.strokeStyle;
-                var lineWidth = ctx1.lineWidth;
-                var draw = function () {
-                    ctx1.save();
-                    ctx1.lineWidth = lineWidth;
-                    ctx1.strokeStyle = color;
-                    ctx1.strokeRect(start.left, start.top, end.left - start.left, end.top - start.top);
-                    ctx1.restore();
-                }
-                draw();
-                that.stack.push(draw);
-                that.rstack = [];
-            }
-        };
-        draw.round = {
-            ing: function (start, end) {
-                ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-                ctx2.beginPath();
-                ctx2.arc( start.left + (end.left-start.left)/2, start.top + (end.top-start.top)/2, len(start, end)/2, 0, 2*Math.PI );
-                ctx2.stroke();
-            },
-            end: function (start, end) {
-                ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-                var color = ctx1.strokeStyle;
-                var lineWidth = ctx1.lineWidth;
-                var draw = function () {
-                    ctx1.save();
-                    ctx1.lineWidth = lineWidth;
-                    ctx1.strokeStyle = color;
-                    ctx1.beginPath();
-                    ctx1.arc( start.left + (end.left-start.left)/2, start.top + (end.top-start.top)/2, len(start, end)/2, 0, 2*Math.PI );
-                    ctx1.stroke();
-                    ctx1.restore();
-                }
-                draw();
-                that.stack.push(draw);
-                that.rstack = [];
-            }
-        };
-        draw.line = {
-            ing: function (start, end) {
-                ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-                ctx2.beginPath();
-                ctx2.moveTo(start.left, start.top);
-                ctx2.lineTo(end.left, end.top);
-                ctx2.stroke();
-            },
-            end: function (start, end) {
-                ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-                var color = ctx1.strokeStyle;
-                var lineWidth = ctx1.lineWidth;
-                var draw = function () {
-                    ctx1.save();
-                    ctx1.strokeStyle = color;
-                    ctx1.lineWidth = lineWidth;
-                    ctx1.beginPath();
-                    ctx1.moveTo(start.left, start.top);
-                    ctx1.lineTo(end.left, end.top);
-                    ctx1.stroke();
-                    ctx1.restore();
-                }
-                draw();
-                that.stack.push(draw);
-                that.rstack = [];
-            }
-        };
+        draw.rect = rect(ctx1, ctx2, that);
+        draw.round = round(ctx1, ctx2, that);
+        draw.line = line(ctx1, ctx2, that);
+        draw.ease = ease(ctx1, ctx2, that);
+        draw.curve = curve(ctx1, ctx2, that);
 
-        var easeFn = [];
-        draw.ease = {
-            ing: function (start, end) {
-                function c2(){
-                    ctx2.clearRect(0,0,canvas2.width,canvas2.height);
-                    ctx2.beginPath();
-                    ctx2.arc(Math.floor(end.left), Math.floor(end.top), 10, 0, 2*Math.PI);
-                    ctx2.stroke();
-                }
-                c2 = _.throttle(c2, 140);
-                c2();
-                var draw = function () {
-                    ctx1.globalCompositeOperation = "destination-out";  //鼠标覆盖区域不显示
-                    ctx1.beginPath();
-                    ctx1.arc(Math.floor(end.left), Math.floor(end.top), 10, 0, 2*Math.PI, true);
-                    ctx1.closePath();
-                    ctx1.fill();
-                    ctx1.globalCompositeOperation = "source-over";
-                }
-                draw();
-                easeFn.push(draw);
-            },
-            end: function (start, end) {
-                that.ctx2.clearRect(0,0,that.canvas2.width,that.canvas2.height);
-                var stackFn = easeFn.slice(0);
-                that.stack.push(function () {
-                    $.each(stackFn, function () {
-                        this();
-                    });
-                });
-                that.rstack = [];
-                that.easeFn = [];
-            }
-        };
-        var points = [];
-        draw.curve = {
-            start: function (position) {
-                ctx2.beginPath();
-                ctx2.lineJoin = 'round';
-                ctx2.moveTo(position.left, position.top);
-                points.push(position);
-            },
-            ing: function (start, end) {
-                ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-                ctx2.lineTo(end.left, end.top);
-                points.push(end);
-                ctx2.stroke();
-            },
-            end: function () {
-                ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
-                //回退或前进功能中重绘时会重新读取该数组，而points是动态变化的，所以拷贝一份出来
-                var stackPoints = points.slice(0);
-                var color = ctx1.strokeStyle;
-                var lineWidth = ctx1.lineWidth;
-                var draw = function () {
-                    ctx1.save();
-                    ctx1.strokeStyle = color;
-                    ctx1.lineWidth = lineWidth;
-                    ctx1.beginPath();
-                    $.each(stackPoints, function(i, p){
-                        if (i===0) {
-                            ctx1.moveTo(p.left, p.top);
-                        } else {
-                            ctx1.lineTo(p.left, p.top);
-                        }
-                    });
-                    ctx1.stroke();
-                    ctx1.restore();
-                }
-                draw();
-                that.stack.push(draw);
-                that.rstack = [];
-                points = [];
-            }
-        };
         ctx1.canvas = canvas1;
         ctx2.canvas = canvas2;
         draw.arrow = shape_arrow(ctx1, ctx2, that);
@@ -248,6 +89,18 @@ define(["drag", "mouse", "arrow"], function(drag, getMouseOffset, shape_arrow) {
             dragend: function (start, end) {
                 draw[that.type].end(start, end);
                 that.allowSelection();
+            },
+            clear: function () {
+                if (option.clearBt) {
+                    $(option.clearBt).click(function () {
+                        var draw = function () {
+                            ctx1.clearRect(0, 0, canvas2.width, canvas2.height);
+                            this.rstack = [];
+                        }
+                        draw();
+                        this.stack.push(draw);
+                    });
+                }
             }
         });
     };
