@@ -156,10 +156,10 @@ define(function(require) {
             draw();
             this.stack.push(draw);
         },
-        save: function() {
+        save: function(el) {
             if (!window.getComputedStyle) { alert('您的浏览器不支持'); return; }
             var data;
-            html2canvas($(this.option.parent)[0], {
+            html2canvas($(el)[0] || $(this.option.parent)[0], {
                 onrendered: function (canvas) {
                     var data = canvas.toDataURL('image/jpeg');
                     var w = window.open();
