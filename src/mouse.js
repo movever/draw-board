@@ -1,4 +1,4 @@
-define(function() {
+define(function(require, exports, module) {
     var elementOffset = function(elem) {
         var x, y;
         x = 0;
