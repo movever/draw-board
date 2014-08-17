@@ -8,10 +8,10 @@ define(function(require) {
         curve = require('curve'),
         ease = require('ease'),
         util = require('util'),
-        a = require('html2canvas');
-    var ident = function() {
+        ident = function() {
             return false;
         };
+    require('html2canvas');
     /**
      * 为canvas添加绘图功能
      * @param canvas1和canvas2是两个重叠的canvas标签 canvas2在canvas1上面
