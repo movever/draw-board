@@ -1,23 +1,14 @@
-define(function(require) {
-    var drag = require('drag'),
-        getMouseOffset = require('mouse'),
-        shape_arrow = require('arrow'),
-        rect = require('arrow'),
-        round = require('round'),
-        line = require('line'),
-        curve = require('curve'),
-        ease = require('ease'),
-        util = require('util'),
-        a = require('html2canvas');
+var DrawBoard;
+(function() {
     var ident = function() {
-            return false;
-        };
+        return false;
+    };
     /**
      * 为canvas添加绘图功能
      * @param canvas1和canvas2是两个重叠的canvas标签 canvas2在canvas1上面
      * 对于ie，不支持canvas，canvas1和canvas2是excanvas初始化的canvas对象
      */
-    var DrawBoard = function(option) {
+    DrawBoard = function(option) {
         var that = this;
         this.option = option || {};
         this.type = option.type || 'rect';
@@ -64,7 +55,7 @@ define(function(require) {
 
         ctx1.canvas = canvas1;
         ctx2.canvas = canvas2;
-        draw.arrow = shape_arrow(ctx1, ctx2, that);
+        draw.arrow = arrow(ctx1, ctx2, that);
         drag(canvas2, {
             dragstart: function (position) {
                 that.refuseSelection();
@@ -169,6 +160,4 @@ define(function(require) {
             });
         }
     }
-
-    return DrawBoard;
-});
+})();

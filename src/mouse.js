@@ -1,4 +1,5 @@
-define(function(require, exports, module) {
+var getMouseOffset;
+(function() {
     var elementOffset = function(elem) {
         var x, y;
         x = 0;
@@ -16,12 +17,11 @@ define(function(require, exports, module) {
         };
     };
     //event是jquery中的event对象 原生event有兼容问题
-    var getOffset = function(elem, event) {
+    getMouseOffset = function(elem, event) {
         var offset = elementOffset(elem);
         return {
             left: event.pageX - offset.x,
             top: event.pageY - offset.y
         };
     };
-    return getOffset;
-});
+})();
