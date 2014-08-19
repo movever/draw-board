@@ -1,40 +1,26 @@
+var rdefineEnd = /\}\);[^}\w]*$/;
+var files = ['src/start', 'src/mouse.js', 'src/drag.js', 'src/util.js',
+    'src/line.js', 'src/curve.js', 'src/round.js', 'src/rect.js', 'src/ease.js', 'src/arrow.js',
+    'src/draw-board.js',
+    'src/end'];
 module.exports = function(grunt){
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: ["./build"],
-        requirejs: {
+        concat: {
             options: {
-                name: 'draw-board',
-                out: "build/draw-board.js",
-                mainConfigFile: "rconfig.js",
-                exclude: ['jquery', 'excanvas', 'html2canvas', 'underscore'],
-                uglify: {
-                    beautify: true
-                },
-                onBuildWrite: function(name, path, contents) {
-                    grunt.log.writeln(name);
-                    contents = contents
-                        .replace( /\s*return\s+[^\}]+(\}\);[^\w\}]*)$/, "$1" )
-                        // Multiple exports
-                        .replace( /\s*exports\.\w+\s*=\s*\w+;/g, "" );
-                    return contents;
-                }
+                separator: '\r\n'
             },
-            build: {}/*,
-            min: {
-                options: {
-                    out: 'build/draw-board.min.js',
-                    uglify: {
-                        beautify: false
-                    }
-                }
-            }*/
+            dist: {
+                src: files,
+                dest: 'build/draw-board.js'
+            }
         },
         uglify: {
             options: {},
             dist: {
                 files: {
-                    'build/draw-board.min.js': 'src/*.js'
+                    'build/draw-board.min.js': 'build/draw-board.js'
                 }
             }
         }

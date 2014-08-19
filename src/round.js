@@ -1,6 +1,7 @@
-define(["util"], function(util) {
+var round;
+(function() {
     var len = util.len;
-    return function(ctx1, ctx2, that) {
+    round = function(ctx1, ctx2, that) {
         var canvas1 = ctx1.canvas,
             canvas2 = ctx2.canvas;
         return {
@@ -29,4 +30,4 @@ define(["util"], function(util) {
             }
         }
     }
-});
+})();
