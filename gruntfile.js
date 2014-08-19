@@ -27,10 +27,18 @@ module.exports = function(grunt){
     });
 
     var cwd = process.cwd();
-    process.chdir('../../');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-requirejs');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    process.chdir(cwd);
+
+    var loadTasks = function() {
+        grunt.loadNpmTasks('grunt-contrib-concat');
+        grunt.loadNpmTasks('grunt-contrib-uglify');
+        grunt.loadNpmTasks('grunt-contrib-requirejs');
+        grunt.loadNpmTasks('grunt-contrib-clean');
+    }
+    try {
+        loadTask();
+    }catch(e){
+        process.chdir('../../');
+        loadTasks();
+        process.chdir(cwd);
+    }
 }
