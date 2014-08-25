@@ -35,7 +35,7 @@ module.exports = function(grunt){
         grunt.loadNpmTasks('grunt-contrib-clean');
     }
     try {
-        loadTask();
+        loadTasks();
     }catch(e){
         process.chdir('../../');
         loadTasks();
