@@ -81,11 +81,41 @@ var drag = function(selector, option) {
 var util = {};
 (function() {
     //两点间的距离
-    util.len = function(start, end){
+    util.len = function (start, end) {
         var w = end.left-start.left
         var h = end.top-start.top;
         return Math.sqrt(Math.pow(w, 2) + Math.pow(h, 2));
     };
+    util.throttle = function(func, wait, options) {
+        var context, args, result;
+        var timeout = null;
+        var previous = 0;
+        options || (options = {});
+        var later = function() {
+            previous = options.leading === false ? 0 : _.now();
+            timeout = null;
+            result = func.apply(context, args);
+            context = args = null;
+        };
+        return function() {
+            var now = util.now();
+            if (!previous && options.leading === false) previous = now;
+            var remaining = wait - (now - previous);
+            context = this;
+            args = arguments;
+            if (remaining <= 0) {
+                clearTimeout(timeout);
+                timeout = null;
+                previous = now;
+                result = func.apply(context, args);
+                context = args = null;
+            } else if (!timeout && options.trailing !== false) {
+                timeout = setTimeout(later, remaining);
+            }
+            return result;
+        };
+    };
+    util.now = Date.now || function() { return new Date().getTime(); };
 })();
 var line = function(ctx1, ctx2, that) {
     var canvas1 = ctx1.canvas,
@@ -233,7 +263,7 @@ var ease = function(ctx1, ctx2, that) {
                 ctx2.arc(Math.floor(end.left), Math.floor(end.top), 10, 0, 2*Math.PI);
                 ctx2.stroke();
             }
-            c2 = _.throttle(c2, 140);
+            c2 = util.throttle(c2, 140);
             c2();
             var draw = function () {
                 ctx1.globalCompositeOperation = "destination-out";  //鼠标覆盖区域不显示
@@ -333,13 +363,14 @@ var DrawBoard;
         canvas1.height = canvas2.height = option.height;
         $canvases.css({ position: 'absolute', left: 0, top: 0 });
         $con.appendTo(option.parent);
-
-        if(window.G_vmlCanvasManager){
-            $("#btn_eraser").hide();
-            canvas1=window.G_vmlCanvasManager.initElement(canvas1);
-            canvas2=window.G_vmlCanvasManager.initElement(canvas2);
+        if (!canvas1.getContext) {
+            if(window.G_vmlCanvasManager){
+                canvas1=window.G_vmlCanvasManager.initElement(canvas1);
+                canvas2=window.G_vmlCanvasManager.initElement(canvas2);
+            } else {
+                alert('对不起，您的浏览器不支持canvas!');
+            }
         }
-
         var ctx1 = this.ctx1 = canvas1.getContext('2d');
         var ctx2 = this.ctx2 = canvas2.getContext('2d');
         var option = option || {
@@ -458,6 +489,9 @@ var DrawBoard;
         },
         save: function(el) {
             if (!window.getComputedStyle) { alert('您的浏览器不支持'); return; }
+            if (!window.html2canvas) {
+                alert('没有引入 html2canvas.js ，不支持保存绘图功能');
+            }
             var data;
             html2canvas($(el)[0] || $(this.option.parent)[0], {
                 onrendered: function (canvas) {
