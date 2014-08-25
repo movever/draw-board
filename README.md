@@ -16,13 +16,14 @@ draw-board
 4. 引入draw-borad.js
 `<script src="build/draw-board.js"></script>`
 5. 使用
-`
+<pre>
 var drawBoard = new DrawBoard({
     width: $parent.width(),
     height: $parent.height(),
     parent: $parent
 });
-`
+</pre>
+
 ###todo
 
 整理、优化现有功能
