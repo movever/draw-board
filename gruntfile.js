@@ -32,7 +32,6 @@ module.exports = function(grunt){
     var loadTasks = function() {
         grunt.loadNpmTasks('grunt-contrib-concat');
         grunt.loadNpmTasks('grunt-contrib-uglify');
-        grunt.loadNpmTasks('grunt-contrib-requirejs');
         grunt.loadNpmTasks('grunt-contrib-clean');
     }
     try {
