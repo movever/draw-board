@@ -28,6 +28,8 @@ var drawBoard = new DrawBoard({
 
 整理、优化现有功能
 
+考虑绘图区域大小变化
+
 文档说明
 
 插件
