@@ -1,4 +1,4 @@
-;(function(){
+;(function(window, $, html2canvas){
 
 var getMouseOffset;
 (function() {
@@ -505,4 +505,4 @@ var DrawBoard;
     }
 })();
 window.DrawBoard = DrawBoard;
-})();
+})(window, jQuery, html2canvas);
