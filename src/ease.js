@@ -10,7 +10,7 @@ var ease = function(ctx1, ctx2, that) {
                 ctx2.arc(Math.floor(end.left), Math.floor(end.top), 10, 0, 2*Math.PI);
                 ctx2.stroke();
             }
-            c2 = _.throttle(c2, 140);
+            c2 = util.throttle(c2, 140);
             c2();
             var draw = function () {
                 ctx1.globalCompositeOperation = "destination-out";  //鼠标覆盖区域不显示

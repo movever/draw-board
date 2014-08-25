@@ -24,13 +24,14 @@ var DrawBoard;
         canvas1.height = canvas2.height = option.height;
         $canvases.css({ position: 'absolute', left: 0, top: 0 });
         $con.appendTo(option.parent);
-
-        if(window.G_vmlCanvasManager){
-            $("#btn_eraser").hide();
-            canvas1=window.G_vmlCanvasManager.initElement(canvas1);
-            canvas2=window.G_vmlCanvasManager.initElement(canvas2);
+        if (!canvas1.getContext) {
+            if(window.G_vmlCanvasManager){
+                canvas1=window.G_vmlCanvasManager.initElement(canvas1);
+                canvas2=window.G_vmlCanvasManager.initElement(canvas2);
+            } else {
+                alert('对不起，您的浏览器不支持canvas!');
+            }
         }
-
         var ctx1 = this.ctx1 = canvas1.getContext('2d');
         var ctx2 = this.ctx2 = canvas2.getContext('2d');
         var option = option || {
@@ -149,6 +150,9 @@ var DrawBoard;
         },
         save: function(el) {
             if (!window.getComputedStyle) { alert('您的浏览器不支持'); return; }
+            if (!window.html2canvas) {
+                alert('没有引入 html2canvas.js ，不支持保存绘图功能');
+            }
             var data;
             html2canvas($(el)[0] || $(this.option.parent)[0], {
                 onrendered: function (canvas) {
