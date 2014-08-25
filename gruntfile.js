@@ -3,7 +3,7 @@ var files = ['src/start', 'src/mouse.js', 'src/drag.js', 'src/util.js',
     'src/line.js', 'src/curve.js', 'src/round.js', 'src/rect.js', 'src/ease.js', 'src/arrow.js',
     'src/draw-board.js',
     'src/end'];
-grunt.log.writeln(process.cwd());
+
 module.exports = function(grunt){
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
